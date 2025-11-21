@@ -14,7 +14,11 @@ import java.util.List;
 
 public class TelaPrincipal extends JFrame {
 
-    private MidiaController controller;   // referência ao controller que executa a lógica
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private MidiaController controller;   // referência ao controller que executa a lógica
     private DefaultListModel<Midia> listModel;  // modelo da lista
     private JList<Midia> jlist;           // lista gráfica onde as mídias aparecem
 

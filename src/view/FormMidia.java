@@ -13,7 +13,11 @@ import java.io.File;
  //Formulário modal para criar/editar uma Midia.
  // Agora, em modo edição (mFornecida != null) preenche os campos e atualiza a própria instância.
  
-public class FormMidia extends JDialog {//Jdialog por ser janela secundaria
+public class FormMidia extends JDialog {
+	 
+	 
+	private static final long serialVersionUID = 1L;
+//Jdialog por ser janela secundaria
     private Class<?> tipo; // tipo a ser criado (Filme.class, Musica.class, Livro.class)
 
     public FormMidia(Frame parent, Class<?> tipo) {

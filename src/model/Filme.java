@@ -6,7 +6,9 @@ package model;
  
 public class Filme extends Midia {
     
-    private String idiomaAudio;
+   
+	private static final long serialVersionUID = 1L;
+	private String idiomaAudio;
 
     
      //Construtor do filme.

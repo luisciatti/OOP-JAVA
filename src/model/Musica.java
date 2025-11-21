@@ -3,7 +3,9 @@ package model;
 
 public class Musica extends Midia {
 
-    // Nome do artista responsável pela música
+   
+	private static final long serialVersionUID = 1L;
+	// Nome do artista responsável pela música
     private String artista;
 
     

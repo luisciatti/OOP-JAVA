@@ -3,7 +3,9 @@ package model;
 
 public class Livro extends Midia {
 
-    // Lista de autores do livro (separados por vírgula)
+   
+	private static final long serialVersionUID = 1L;
+	// Lista de autores do livro (separados por vírgula)
     private String autores;
 
     
