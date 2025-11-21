@@ -6,42 +6,58 @@ import view.TelaPrincipal;
 
 import java.util.List;
 
-// Controlador responsável pela comunicação entre a interface gráfica (view)
-// e o GerenciadorMidias, que contém as regras de negócio.
- 
-
+/**
+ * Controlador responsável por realizar a comunicação entre a camada de visão (view)
+ * e o {@link GerenciadorMidias}, que contém as regras de negócio do sistema.
+ * <p>
+ * Esta classe centraliza ações de adicionar, editar, remover, mover e renomear mídias,
+ * bem como aplicar filtros e atualizar a lista exibida na interface gráfica.
+ */
 public class MidiaController {
 
-    // gerencia todas as operações com as mídias (negócio)
+    /**
+     * Instância do gerenciador que concentra todas as regras de negócio
+     * relacionadas às mídias.
+     */
     private GerenciadorMidias gerenciador;
 
-    // janela principal da interface
+    /**
+     * Janela principal da interface gráfica da aplicação.
+     */
     private TelaPrincipal viewPrincipal;
 
-    //Construtor que recebe a view e o gerenciador.
-    
+    /**
+     * Construtor da classe. Recebe a view principal e o gerenciador de mídias.
+     *
+     * @param gerenciador objeto responsável pelas regras de negócio
+     * @param view        interface gráfica principal
+     */
     public MidiaController(GerenciadorMidias gerenciador, TelaPrincipal view) {
         this.gerenciador = gerenciador;
         this.viewPrincipal = view;
     }
-    
-    //Inicializa o sistema:
-    // carrega mídias salvas no diretório
-    // atualiza a lista da view
-    // exibe a tela principal
-     
+
+    /**
+     * Inicializa o sistema realizando:
+     * <ul>
+     *     <li>Carregamento das mídias salvas no diretório;</li>
+     *     <li>Atualização da lista na interface gráfica;</li>
+     *     <li>Exibição da tela principal.</li>
+     * </ul>
+     */
     public void inicializar() {
         gerenciador.carregarMidias();
         atualizarListaView();
         viewPrincipal.mostrar();
     }
 
-    //Ação do botão "Adicionar".
-    //Abre o formulário e, caso seja preenchido corretamente,
-    // adiciona a nova mídia no gerenciador.
-     
+    /**
+     * Ação executada quando o usuário clica no botão "Adicionar".
+     * <p>
+     * Abre o formulário de edição/criação e, caso preenchido corretamente,
+     * adiciona a nova mídia ao gerenciador.
+     */
     public void acaoAdicionar() {
-        // usa o mesmo form de edição para criar nova mídia
         Midia nova = viewPrincipal.pedirDadosEdicao(null);
 
         if (nova != null) {
@@ -50,23 +66,30 @@ public class MidiaController {
         }
     }
 
-    //Ação do botão "Editar".
-    // Abre o form com os dados da mídia selecionada e,
-    // após a edição, atualiza no gerenciador.
-     
+    /**
+     * Ação executada quando o usuário clica no botão "Editar".
+     * <p>
+     * Abre o formulário com os dados da mídia selecionada e, caso editada,
+     * atualiza a instância existente no gerenciador.
+     *
+     * @param m mídia selecionada para edição
+     */
     public void acaoEditar(Midia m) {
         Midia editada = viewPrincipal.pedirDadosEdicao(m);
 
         if (editada != null) {
-            // a própria instância é modificada e devolvida pela view
             gerenciador.editarMidia(editada);
             atualizarListaView();
         }
     }
-    
-    //Ação do botão "Remover".
-    //Remove a mídia da lista e do disco (arquivo .tpoo).
-   
+
+    /**
+     * Ação do botão "Remover".
+     * <p>
+     * Remove a mídia tanto da lista quanto do disco (arquivo .tpoo).
+     *
+     * @param m mídia a ser removida
+     */
     public void acaoRemover(Midia m) {
         boolean ok = gerenciador.removerMidia(m);
 
@@ -78,29 +101,48 @@ public class MidiaController {
         }
     }
 
-    // Ação do botão "Mover".
-    // Move o arquivo físico da mídia para outro diretório.
-     
+    /**
+     * Ação do botão "Mover".
+     * <p>
+     * Move o arquivo físico da mídia para um novo diretório.
+     *
+     * @param m           mídia a ser movida
+     * @param novoCaminho caminho de destino
+     */
     public void acaoMover(Midia m, String novoCaminho) {
         boolean ok = gerenciador.moverMidia(m, novoCaminho);
         viewPrincipal.mostrarMensagem(ok ? "Movido com sucesso." : "Falha ao mover.");
         atualizarListaView();
     }
 
-    // Ação do botão "Renomear".
-    // Renomeia o arquivo físico da mídia.
-     
+    /**
+     * Ação do botão "Renomear".
+     * <p>
+     * Renomeia o arquivo físico associado à mídia.
+     *
+     * @param m        mídia a ser renomeada
+     * @param novoNome novo nome do arquivo
+     */
     public void acaoRenomear(Midia m, String novoNome) {
         boolean ok = gerenciador.renomearMidia(m, novoNome);
         viewPrincipal.mostrarMensagem(ok ? "Renomeado com sucesso." : "Falha ao renomear.");
         atualizarListaView();
     }
-    
-    //Aplica filtros vindos da interface:
-    // tipo (Filme, Livro, Música)
-    // categoria
-    // ordenação por título ou duração
-    
+
+    /**
+     * Aplica filtros recebidos pela interface gráfica.
+     * <p>
+     * Os filtros podem incluir:
+     * <ul>
+     *     <li>Tipo da mídia (Filme, Livro, Música);</li>
+     *     <li>Categoria;</li>
+     *     <li>Ordenação por título ou duração.</li>
+     * </ul>
+     *
+     * @param tipo       tipo de mídia (classe específica) ou {@code null} para não filtrar pelo tipo
+     * @param categoria  categoria desejada ou {@code null} para não filtrar por categoria
+     * @param ordenacao  tipo de ordenação ("titulo" ou "duracao")
+     */
     public void aplicarFiltro(Class<?> tipo, String categoria, String ordenacao) {
         List<Midia> resultado = gerenciador.filtrarCombinado(tipo, categoria);
 
@@ -117,14 +159,19 @@ public class MidiaController {
         viewPrincipal.atualizarLista(resultado);
     }
 
-    // Atualiza a lista da interface com todas as mídias salvas.
-    
+    /**
+     * Atualiza a lista apresentada na interface com todas as mídias atualmente
+     * salvas no gerenciador.
+     */
     public void atualizarListaView() {
         viewPrincipal.atualizarLista(gerenciador.getListaMidias());
     }
-    
-    // Permite trocar a view principal (opcional, conforme UML).
-     
+
+    /**
+     * Permite alterar a view principal, caso necessário.
+     *
+     * @param view nova interface principal
+     */
     public void setViewPrincipal(TelaPrincipal view) {
         this.viewPrincipal = view;
     }

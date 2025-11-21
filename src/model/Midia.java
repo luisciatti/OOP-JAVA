@@ -2,40 +2,61 @@ package model;
 
 import java.io.Serializable;
 
-
-// Classe abstrata que representa uma mídia genérica.
-// Todas as mídias (Filme, Música, Livro) herdam desta classe.
-//
- //Possui atributos básicos como caminho do arquivo, tamanho em disco,
- //título, categoria e duração. Também disponibiliza métodos para
- // manipulação e exibição dessas informações.
- 
- //Implementa Serializable para permitir persistência em arquivos .tpoo(O negocio dificil).
- 
+/**
+ * Classe abstrata que representa uma mídia genérica no sistema. <br>
+ * Todas as mídias específicas (como {@link Filme}, {@link Musica}, {@link Livro})
+ * herdam desta classe. <br><br>
+ *
+ * Armazena informações comuns como:
+ * <ul>
+ *     <li>Caminho do arquivo</li>
+ *     <li>Tamanho em disco</li>
+ *     <li>Título</li>
+ *     <li>Categoria</li>
+ *     <li>Duração (minutos, segundos ou páginas dependendo da subclasse)</li>
+ * </ul>
+ *
+ * Também fornece métodos utilitários para manipulação e exibição desses
+ * atributos, além de implementar {@link Serializable} para permitir que
+ * instâncias sejam persistidas em arquivos binários (.tpoo).
+ */
 public abstract class Midia implements Serializable {
 
+    /** Identificador de versão para serialização. */
     private static final long serialVersionUID = 1L;
 
-    // Caminho completo do arquivo de mídia no sistema de arquivos
+    /** Caminho completo do arquivo da mídia no sistema de arquivos. */
     private String caminhoArquivo;
 
-    // Tamanho do arquivo em disco
+    /** Tamanho do arquivo em disco (MB). */
     private double tamanhoEmDisco;
 
-    // Título da mídia
+    /** Título da mídia. */
     private String titulo;
 
-    // Categoria ou gênero (ex: ação, romance, pop, etc.)
+    /** Categoria ou gênero (ex.: Ação, Romance, Pop, Terror). */
     private String categoria;
 
-    // Duração em unidades específicas: minutos (filme),
-    // segundos (música) ou páginas (livro)
+    /**
+     * Duração em uma unidade específica:
+     * <ul>
+     *     <li>Minutos para filmes</li>
+     *     <li>Segundos para músicas</li>
+     *     <li>Páginas para livros</li>
+     * </ul>
+     */
     private int duracao;
 
-    
-     // Construtor principal da classe Midia.
-     // Inicializa todos os atributos genéricos de uma mídia.
-     
+    /**
+     * Construtor principal da classe Midia. <br>
+     * Inicializa todos os atributos genéricos utilizados pelas subclasses.
+     *
+     * @param caminhoArquivo caminho físico do arquivo no sistema
+     * @param tamanhoEmDisco tamanho do arquivo em MB
+     * @param titulo título da mídia
+     * @param categoria categoria ou gênero
+     * @param duracao valor numérico representando a duração
+     */
     public Midia(String caminhoArquivo, double tamanhoEmDisco, String titulo, String categoria, int duracao) {
         this.caminhoArquivo = caminhoArquivo;
         this.tamanhoEmDisco = tamanhoEmDisco;
@@ -44,60 +65,82 @@ public abstract class Midia implements Serializable {
         this.duracao = duracao;
     }
 
-    // Retorna o caminho do arquivo
-    public String getCaminhoArquivo() { 
-        return caminhoArquivo; 
+    /** @return caminho completo do arquivo da mídia */
+    public String getCaminhoArquivo() {
+        return caminhoArquivo;
     }
 
-    // Define um novo caminho de arquivo
-    public void setCaminhoArquivo(String caminhoArquivo) { 
-        this.caminhoArquivo = caminhoArquivo; 
+    /**
+     * Define um novo caminho para o arquivo da mídia.
+     *
+     * @param caminhoArquivo novo caminho completo
+     */
+    public void setCaminhoArquivo(String caminhoArquivo) {
+        this.caminhoArquivo = caminhoArquivo;
     }
 
-    // Retorna o tamanho em disco
-    public double getTamanhoEmDisco() { 
-        return tamanhoEmDisco; 
+    /** @return tamanho do arquivo em MB */
+    public double getTamanhoEmDisco() {
+        return tamanhoEmDisco;
     }
 
-    // Define um novo tamanho em disco
-    public void setTamanhoEmDisco(double tamanhoEmDisco) { 
-        this.tamanhoEmDisco = tamanhoEmDisco; 
+    /**
+     * Atualiza o tamanho da mídia em disco.
+     *
+     * @param tamanhoEmDisco novo tamanho em MB
+     */
+    public void setTamanhoEmDisco(double tamanhoEmDisco) {
+        this.tamanhoEmDisco = tamanhoEmDisco;
     }
 
-    // Retorna o título
-    public String getTitulo() { 
-        return titulo; 
+    /** @return título da mídia */
+    public String getTitulo() {
+        return titulo;
     }
 
-    // Define um novo título
-    public void setTitulo(String titulo) { 
-        this.titulo = titulo; 
+    /**
+     * Define um novo título para a mídia.
+     *
+     * @param titulo novo título
+     */
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    // Retorna a categoria
-    public String getCategoria() { 
-        return categoria; 
+    /** @return categoria da mídia */
+    public String getCategoria() {
+        return categoria;
     }
 
-    // Define uma nova categoria
-    public void setCategoria(String categoria) { 
-        this.categoria = categoria; 
+    /**
+     * Atualiza a categoria da mídia.
+     *
+     * @param categoria nova categoria ou gênero
+     */
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
-    // Retorna a duração
-    public int getDuracao() { 
-        return duracao; 
+    /** @return duração da mídia (min, seg ou páginas) */
+    public int getDuracao() {
+        return duracao;
     }
 
-    // Define uma nova duração
-    public void setDuracao(int duracao) { 
-        this.duracao = duracao; 
+    /**
+     * Define uma nova duração.
+     *
+     * @param duracao novo valor de duração
+     */
+    public void setDuracao(int duracao) {
+        this.duracao = duracao;
     }
 
-    
-     // Retorna a extensão do arquivo da mídia.
-     // Exemplo: "mp4", "mp3", "pdf".
-     
+    /**
+     * Retorna a extensão do arquivo da mídia, como "mp4", "mp3" ou "pdf". <br>
+     * Caso o caminho não contenha extensão, retorna uma string vazia.
+     *
+     * @return extensão do arquivo em minúsculas
+     */
     public String getExtensao() {
         if (caminhoArquivo == null) return "";
         int i = caminhoArquivo.lastIndexOf('.');
@@ -107,19 +150,26 @@ public abstract class Midia implements Serializable {
         return "";
     }
 
-    
-     // Retorna uma representação textual básica da mídia,
-     //contendo título, extensão e categoria.
-     
+    /**
+     * Retorna uma representação textual básica da mídia,
+     * contendo título, extensão e categoria.
+     *
+     * @return texto resumido da mídia
+     */
     @Override
     public String toString() {
         return String.format("%s (%s) - %s", titulo, getExtensao(), categoria);
     }
 
-    
-     // Exibe todos os detalhes da mídia, incluindo
-     //atributos gerais e específicos (dependendo da subclasse).
-     
+    /**
+     * Exibe todos os detalhes da mídia, incluindo:
+     * <ul>
+     *   <li>Atributos gerais (título, duração, etc.)</li>
+     *   <li>Atributos específicos das subclasses</li>
+     * </ul>
+     *
+     * @return string contendo todas as informações detalhadas da mídia
+     */
     public String exibirDetalhes() {
         StringBuilder sb = new StringBuilder();
         sb.append("Título: ").append(titulo).append("\n");
@@ -128,16 +178,16 @@ public abstract class Midia implements Serializable {
         sb.append("Caminho: ").append(caminhoArquivo).append("\n");
         sb.append("Tamanho (KB): ").append(tamanhoEmDisco).append("\n");
 
-        // adiciona os atributos da subclasse
         sb.append(exibirAtributosEspecificos());
 
         return sb.toString();
     }
 
-    
-     // Método abstrato que deve ser implementado pelas subclasses
-      //  para exibir apenas os atributos específicos. para fazer o 10 lá
-   
-     
+    /**
+     * Método abstrato que deve ser implementado por cada subclasse,
+     * retornando apenas os atributos específicos daquela mídia.
+     *
+     * @return string descrevendo os atributos particulares da subclasse
+     */
     public abstract String exibirAtributosEspecificos();
 }

@@ -8,58 +8,70 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
-//Tela principal da aplicação.
-//Responsável por exibir a lista de mídias e oferecer botões
-// para executar as ações do controlador (adicionar, editar, remover, mover, etc.).
-
+/**
+ * Tela principal da aplicação para gerenciamento de mídias.
+ * <p>
+ * Esta classe exibe a lista de mídias cadastradas, além de fornecer
+ * botões para executar ações como adicionar, editar, remover,
+ * mover arquivos, renomear arquivos, filtrar e exibir detalhes.
+ * <p>
+ * A comunicação com a lógica de negócios é feita através do {@link MidiaController}.
+ */
 public class TelaPrincipal extends JFrame {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private MidiaController controller;   // referência ao controller que executa a lógica
-    private DefaultListModel<Midia> listModel;  // modelo da lista
-    private JList<Midia> jlist;           // lista gráfica onde as mídias aparecem
+    private static final long serialVersionUID = 1L;
 
-    // Construtor da tela principal.
-    // Inicializa a interface chamando setupUI().
-     
+    /** Controlador responsável pelas operações de negócio. */
+    private MidiaController controller;
+
+    /** Modelo que mantém os elementos exibidos no JList. */
+    private DefaultListModel<Midia> listModel;
+
+    /** Lista gráfica que exibe as mídias cadastradas. */
+    private JList<Midia> jlist;
+
+    /**
+     * Construtor da tela principal.
+     *
+     * @param controller controlador responsável pela lógica da aplicação
+     */
     public TelaPrincipal(MidiaController controller) {
         super("Gerenciador de Mídias");
         this.controller = controller;
         setupUI();
     }
 
-    // Monta toda a interface gráfica:
-    // Lista central com as mídias
-    // Barra inferior com botões de ações
-     
+    /**
+     * Configura toda a interface gráfica da janela:
+     * <ul>
+     *     <li>Lista central contendo as mídias</li>
+     *     <li>Painel inferior com botões de ações</li>
+     * </ul>
+     * Não deve ser chamado fora do construtor.
+     */
     private void setupUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
         setLayout(new BorderLayout());
 
-        /* ---------- LISTA DE MÍDIAS ---------- */
+        /* LISTA DE MÍDIAS */
         listModel = new DefaultListModel<>();
         jlist = new JList<>(listModel);
         jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // adiciona a lista com scroll
         add(new JScrollPane(jlist), BorderLayout.CENTER);
 
-        /* ---------- PAINEL DE BOTÕES ---------- */
+        /* PAINEL DE BOTÕES */
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        // Botão de adicionar
+        /* Botão Adicionar */
         JButton btnAdd = new JButton("Adicionar");
         btnAdd.addActionListener(e -> controller.acaoAdicionar());
         bottom.add(btnAdd);
 
-        // Botão de editar
+        /* Botão Editar */
         JButton btnEditar = new JButton("Editar");
         btnEditar.addActionListener(e -> {
-            // pega o item selecionado
             Midia selecionada = jlist.getSelectedValue();
             if (selecionada == null) {
                 mostrarMensagem("Selecione uma mídia para editar.");
@@ -69,7 +81,7 @@ public class TelaPrincipal extends JFrame {
         });
         bottom.add(btnEditar);
 
-        // Botão remover
+        /* Botão Remover */
         JButton btnRemover = new JButton("Remover");
         btnRemover.addActionListener(e -> {
             Midia selecionada = jlist.getSelectedValue();
@@ -78,11 +90,8 @@ public class TelaPrincipal extends JFrame {
                 return;
             }
 
-            // confirmação simples
-            int conf = JOptionPane.showConfirmDialog(this, 
-                    "Confirma remoção?", 
-                    "Remover", 
-                    JOptionPane.YES_NO_OPTION);
+            int conf = JOptionPane.showConfirmDialog(
+                    this, "Confirma remoção?", "Remover", JOptionPane.YES_NO_OPTION);
 
             if (conf == JOptionPane.YES_OPTION) {
                 controller.acaoRemover(selecionada);
@@ -90,7 +99,7 @@ public class TelaPrincipal extends JFrame {
         });
         bottom.add(btnRemover);
 
-        // Botão mover arquivo
+        /* Botão Mover Arquivo */
         JButton btnMover = new JButton("Mover");
         btnMover.addActionListener(e -> {
             Midia selecionada = jlist.getSelectedValue();
@@ -110,7 +119,7 @@ public class TelaPrincipal extends JFrame {
         });
         bottom.add(btnMover);
 
-        // Botão renomear arquivo
+        /* Botão Renomear Arquivo */
         JButton btnRenomear = new JButton("Renomear");
         btnRenomear.addActionListener(e -> {
             Midia selecionada = jlist.getSelectedValue();
@@ -119,9 +128,8 @@ public class TelaPrincipal extends JFrame {
                 return;
             }
 
-            // entrada de texto simples
-            String novoNome = JOptionPane.showInputDialog(this, 
-                    "Novo nome (com extensão):", "");
+            String novoNome = JOptionPane.showInputDialog(
+                    this, "Novo nome (com extensão):", "");
 
             if (novoNome != null && !novoNome.trim().isEmpty()) {
                 controller.acaoRenomear(selecionada, novoNome.trim());
@@ -129,39 +137,36 @@ public class TelaPrincipal extends JFrame {
         });
         bottom.add(btnRenomear);
 
-        /* ---------- FILTRO + ORDENAÇÃO ---------- */
+        /* Botão Filtrar e Ordenar */
         JButton btnFiltrar = new JButton("Filtrar (Formato/Categoria)");
         btnFiltrar.addActionListener(e -> {
 
-            // seleção de tipo
             String[] tipos = {"Todos", "Filme", "Musica", "Livro"};
-            String tipoSel = (String) JOptionPane.showInputDialog(this,
-                    "Formato:", "Filtro",
-                    JOptionPane.PLAIN_MESSAGE, null,
-                    tipos, tipos[0]);
+            String tipoSel = (String) JOptionPane.showInputDialog(
+                    this, "Formato:", "Filtro",
+                    JOptionPane.PLAIN_MESSAGE, null, tipos, tipos[0]
+            );
 
             Class<?> tipo = null;
             if ("Filme".equals(tipoSel)) tipo = model.Filme.class;
             else if ("Musica".equals(tipoSel)) tipo = model.Musica.class;
             else if ("Livro".equals(tipoSel)) tipo = model.Livro.class;
 
-            // Categoria opcional
-            String categoria = JOptionPane.showInputDialog(this, 
-                    "Categoria (deixe vazio para todos):");
+            String categoria = JOptionPane.showInputDialog(
+                    this, "Categoria (deixe vazio para todos):");
             if (categoria != null && categoria.trim().isEmpty()) categoria = null;
 
-            // Ordem simples
             String[] ords = {"nenhuma", "titulo", "duracao"};
-            String ord = (String) JOptionPane.showInputDialog(this,
-                    "Ordenar por:", "Ordenar",
-                    JOptionPane.PLAIN_MESSAGE, null,
-                    ords, ords[0]);
+            String ord = (String) JOptionPane.showInputDialog(
+                    this, "Ordenar por:", "Ordenar",
+                    JOptionPane.PLAIN_MESSAGE, null, ords, ords[0]
+            );
 
             controller.aplicarFiltro(tipo, categoria, ord);
         });
         bottom.add(btnFiltrar);
-        
-      // Botão para Exibir os detalhes
+
+        /* Botão Exibir Detalhes */
         JButton btnDetalhes = new JButton("Exibir Detalhes");
         btnDetalhes.addActionListener(e -> {
             Midia selecionada = jlist.getSelectedValue();
@@ -170,28 +175,28 @@ public class TelaPrincipal extends JFrame {
                 return;
             }
 
-            JOptionPane.showMessageDialog(this,
-                    selecionada.exibirDetalhes(),
-                    "Detalhes da Mídia",
-                    JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this, selecionada.exibirDetalhes(),
+                    "Detalhes da Mídia", JOptionPane.INFORMATION_MESSAGE
+            );
         });
         bottom.add(btnDetalhes);
-
-        
-       
 
         add(bottom, BorderLayout.SOUTH);
     }
 
-    //Mostra a janela (UI Thread).
-     
+    /**
+     * Exibe a janela principal na Event Dispatch Thread.
+     */
     public void mostrar() {
         SwingUtilities.invokeLater(() -> setVisible(true));
     }
 
-   
-     // Atualiza a lista de mídias exibida na interface.
-     
+    /**
+     * Atualiza a lista exibida na interface com o conteúdo fornecido.
+     *
+     * @param midias lista de mídias atualizada
+     */
     public void atualizarLista(List<Midia> midias) {
         SwingUtilities.invokeLater(() -> {
             listModel.clear();
@@ -199,21 +204,31 @@ public class TelaPrincipal extends JFrame {
         });
     }
 
-    
-     //Abre o formulário FormMidia para edição ou criação.
-    
+    /**
+     * Abre o {@link FormMidia} para criação ou edição de uma mídia.
+     *
+     * @param m mídia existente (edição) ou {@code null} para criação
+     * @return mídia criada/editada ou {@code null} caso o usuário cancele
+     */
     public Midia pedirDadosEdicao(Midia m) {
         FormMidia form = new FormMidia(this, m == null ? null : m.getClass());
         return form.mostrar(m);
     }
-    //Exibe uma mensagem simples.
-     
+
+    /**
+     * Exibe uma mensagem simples em um {@link JOptionPane}.
+     *
+     * @param msg texto da mensagem
+     */
     public void mostrarMensagem(String msg) {
         JOptionPane.showMessageDialog(this, msg);
     }
 
-    // Abre um JFileChooser para escolher um novo arquivo.
-     
+    /**
+     * Abre um {@link JFileChooser} para selecionar um arquivo.
+     *
+     * @return arquivo selecionado ou {@code null} se cancelado
+     */
     public File pedirEntradaNovoArquivo() {
         JFileChooser chooser = new JFileChooser();
         int res = chooser.showOpenDialog(this);
